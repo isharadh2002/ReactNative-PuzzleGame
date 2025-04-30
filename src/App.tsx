@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 10,
     color: '#333333',
+    backgroundColor: 'rgba(255, 127, 127, 1)',
   },
 });
 
