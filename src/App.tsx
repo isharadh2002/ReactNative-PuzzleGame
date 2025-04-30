@@ -1,73 +1,29 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  StatusBar,
-  useColorScheme,
-} from 'react-native';
+import {View, Text, StyleSheet, SafeAreaView, StatusBar} from 'react-native';
 import React from 'react';
-
-let isDarkMode = false;
-
-const lightTheme = {
-  background: 'rgba(255, 223, 223, 1)',
-  text: '#333333',
-  titleBar: 'rgba(255, 191, 191, 1)', // Light Red
-  buttonBackground: 'rgba(255, 127, 127, 1)',
-  statusBarBackground: 'rgba(255, 191, 191, 1)',
-  statusBarStyle: 'dark-content',
-};
-
-const darkTheme = {
-  background: 'rgba(127, 0, 0, 1)',
-  text: '#FFFFFF',
-  titleBar: 'rgba(255, 31, 31, 1)', // Dark Red
-  buttonBackground: 'rgba(255, 31, 31, 1)',
-  statusBarBackground: 'rgba(255, 31, 31, 1)',
-  statusBarStyle: 'light-content',
-};
+import {useTheme} from './Theme';
 
 function App() {
-  const colorScheme = useColorScheme(); // 'light' or 'dark'
-
-  isDarkMode = colorScheme === 'dark';
-
-  const statusBarStyle = isDarkMode ? 'light-content' : 'dark-content';
-
-  const currentTheme = isDarkMode ? darkTheme : lightTheme;
+  const {theme, isDarkMode} = useTheme();
 
   return (
     <>
       <StatusBar
-        backgroundColor={currentTheme.statusBarBackground}
-        barStyle={statusBarStyle}
+        backgroundColor={theme.statusBarBackground}
+        barStyle={theme.statusBarStyle}
       />
       <SafeAreaView
-        style={[
-          styles.mainContainer,
-          {backgroundColor: currentTheme.background},
-        ]}>
-        <View
-          style={[styles.titleBar, {backgroundColor: currentTheme.titleBar}]}>
-          <Text style={[styles.text, {color: currentTheme.text}]}>
-            Title Bar
-          </Text>
+        style={[styles.mainContainer, {backgroundColor: theme.background}]}>
+        <View style={[styles.titleBar, {backgroundColor: theme.titleBar}]}>
+          <Text style={[styles.text, {color: theme.text}]}>Title Bar</Text>
         </View>
         <View
           style={[
             styles.sectionContainer,
-            {backgroundColor: currentTheme.background},
+            {backgroundColor: theme.background},
           ]}>
-          <Text style={[styles.text, {color: currentTheme.text}]}>
-            Hello World
-          </Text>
-          <Text style={[styles.text, {color: currentTheme.text}]}>
-            Hello World
-          </Text>
-          <Text style={[styles.text, {color: currentTheme.text}]}>
-            Hello World
-          </Text>
+          <Text style={[styles.text, {color: theme.text}]}>Hello World</Text>
+          <Text style={[styles.text, {color: theme.text}]}>Hello World</Text>
+          <Text style={[styles.text, {color: theme.text}]}>Hello World</Text>
         </View>
       </SafeAreaView>
     </>
@@ -96,7 +52,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
-    color: '#333333',
+    color: '#333333', // This will be overridden by the theme
   },
 });
 
