@@ -54,7 +54,7 @@ function Section({children, title}: SectionProps): React.JSX.Element {
   );
 }
 
-function App(): React.JSX.Element {
+function App_Original(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -127,4 +127,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default App_Original;
