@@ -1,10 +1,22 @@
 import React from 'react';
 import {SafeAreaView, StatusBar, StyleSheet, Text, View} from 'react-native';
 import {useTheme} from '../Theme';
+import PropTypes from 'prop-types';
 
-function GameScreen() {
+function GameScreen({randomNumberCount}) {
   const {theme, isDarkMode} = useTheme();
-  const targetNumber = 10 + Math.floor(Math.random() * 40);
+  let targetNumber = 10 + Math.floor(Math.random() * 40);
+
+  const randomNumbers = Array.from(
+    {length: randomNumberCount},
+    () => Math.floor(Math.random() * 19) + 1,
+  );
+  const randomNumbersString = randomNumbers.join(', ');
+
+  targetNumber = randomNumbers
+    .slice(0, randomNumberCount - 2)
+    .reduce((acc, curr) => acc + curr, 0);
+
   return (
     <>
       <StatusBar
@@ -19,15 +31,28 @@ function GameScreen() {
             Number Game
           </Text>
         </View>
+
         <View style={[styles.targetNumberContainer]}>
           <Text style={[styles.targetNumber, {color: theme.text}]}>
             {targetNumber}
           </Text>
         </View>
+
+        <View style={[styles.numberListContainer]}>
+          {randomNumbers.map((number, index) => (
+            <View key={index} style={[styles.numberListItem]}>
+              <Text style={{color: theme.text}}>{number}</Text>
+            </View>
+          ))}
+        </View>
       </SafeAreaView>
     </>
   );
 }
+
+GameScreen.propTypes = {
+  randomNumberCount: PropTypes.number.isRequired,
+};
 
 export default GameScreen;
 
@@ -63,5 +88,21 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 30,
     fontWeight: 'bold',
+  },
+
+  numberListItem: {
+    backgroundColor: 'rgba(255, 127, 127, 1)',
+    width: '48%',
+    marginVertical: 8,
+    padding: 20,
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  numberListContainer: {
+    width: '100%',
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
 });

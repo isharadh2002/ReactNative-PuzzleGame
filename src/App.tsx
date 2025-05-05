@@ -5,7 +5,7 @@ import GameScreen from './screens/GameScreen';
 function App() {
   return (
     <>
-      <GameScreen />
+      <GameScreen randomNumberCount={6}/>
     </>
   );
 }
