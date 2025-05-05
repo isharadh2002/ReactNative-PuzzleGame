@@ -13,9 +13,11 @@ import PropTypes from 'prop-types';
 function RandomNumberCard({
   randomNumber,
   isSelected,
+  onPress,
 }: {
   randomNumber: number;
   isSelected: boolean;
+  onPress: () => void;
 }) {
   const {theme, isDarkMode} = useTheme();
   return (
@@ -26,6 +28,7 @@ function RandomNumberCard({
       ]}
       onPress={() => {
         console.log(randomNumber + ' pressed');
+        onPress();
       }}>
       <Text style={[styles.numberListText, {color: theme.text}]}>
         {randomNumber}
@@ -37,20 +40,29 @@ function RandomNumberCard({
 function GameScreen({randomNumberCount}: {randomNumberCount: number}) {
   const {theme, isDarkMode} = useTheme();
 
-  const randomNumbers = Array.from(
-    {length: randomNumberCount},
-    () => Math.floor(Math.random() * 19) + 1,
+  const [randomNumbers] = useState(() =>
+    Array.from(
+      {length: randomNumberCount},
+      () => Math.floor(Math.random() * 19) + 1,
+    ),
   );
-  const randomNumbersString = randomNumbers.join(', ');
 
-  let targetNumber = randomNumbers
-    .slice(0, randomNumberCount - 2)
-    .reduce((acc, curr) => acc + curr, 0);
+  const [targetNumber] = useState(() =>
+    randomNumbers
+      .slice(0, randomNumberCount - 2)
+      .reduce((acc, curr) => acc + curr, 0),
+  );
 
-  const [selectedNumbers, setSelectedNumbers] = useState<number[]>([0, 3]);
+  const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
 
   const isNumberSelected = (index: number) => {
     return selectedNumbers.includes(index);
+  };
+
+  const selectNumber = (index: number) => {
+    if (!isNumberSelected(index)) {
+      setSelectedNumbers([...selectedNumbers, index]);
+    }
   };
 
   return (
@@ -80,6 +92,7 @@ function GameScreen({randomNumberCount}: {randomNumberCount: number}) {
               key={index}
               randomNumber={number}
               isSelected={isNumberSelected(index)}
+              onPress={() => selectNumber(index)}
             />
           ))}
         </View>
@@ -93,7 +106,8 @@ GameScreen.propTypes = {
 };
 
 RandomNumberCard.propTypes = {
-  randomNumber: PropTypes.number,
+  randomNumber: PropTypes.number.isRequired,
+  isSelected: PropTypes.bool.isRequired,
 };
 
 export default GameScreen;
