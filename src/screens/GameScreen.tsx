@@ -1,22 +1,41 @@
-import React from 'react';
-import {SafeAreaView, StatusBar, StyleSheet, Text, View} from 'react-native';
+import React, {useState} from 'react';
+import {
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useTheme} from '../Theme';
 import PropTypes from 'prop-types';
 
-const RandomNumberCard = ({randomNumber}: {randomNumber: number}) => {
+function RandomNumberCard({
+  randomNumber,
+  isSelected,
+}: {
+  randomNumber: number;
+  isSelected: boolean;
+}) {
   const {theme, isDarkMode} = useTheme();
   return (
-    <View style={[styles.numberListItem]}>
+    <TouchableOpacity
+      style={[
+        styles.numberListItem,
+        isSelected ? styles.numberListItemSelected : null,
+      ]}
+      onPress={() => {
+        console.log(randomNumber + ' pressed');
+      }}>
       <Text style={[styles.numberListText, {color: theme.text}]}>
         {randomNumber}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
-};
+}
 
 function GameScreen({randomNumberCount}: {randomNumberCount: number}) {
   const {theme, isDarkMode} = useTheme();
-  let targetNumber = 10 + Math.floor(Math.random() * 40);
 
   const randomNumbers = Array.from(
     {length: randomNumberCount},
@@ -24,9 +43,15 @@ function GameScreen({randomNumberCount}: {randomNumberCount: number}) {
   );
   const randomNumbersString = randomNumbers.join(', ');
 
-  targetNumber = randomNumbers
+  let targetNumber = randomNumbers
     .slice(0, randomNumberCount - 2)
     .reduce((acc, curr) => acc + curr, 0);
+
+  const [selectedNumbers, setSelectedNumbers] = useState<number[]>([0, 3]);
+
+  const isNumberSelected = (index: number) => {
+    return selectedNumbers.includes(index);
+  };
 
   return (
     <>
@@ -51,7 +76,11 @@ function GameScreen({randomNumberCount}: {randomNumberCount: number}) {
 
         <View style={[styles.numberListContainer]}>
           {randomNumbers.map((number, index) => (
-            <RandomNumberCard key={index} randomNumber={number} />
+            <RandomNumberCard
+              key={index}
+              randomNumber={number}
+              isSelected={isNumberSelected(index)}
+            />
           ))}
         </View>
       </SafeAreaView>
@@ -61,6 +90,10 @@ function GameScreen({randomNumberCount}: {randomNumberCount: number}) {
 
 GameScreen.propTypes = {
   randomNumberCount: PropTypes.number.isRequired,
+};
+
+RandomNumberCard.propTypes = {
+  randomNumber: PropTypes.number,
 };
 
 export default GameScreen;
@@ -77,7 +110,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   targetNumberContainer: {
-    marginVertical: 20,
+    marginVertical: 40,
     paddingVertical: 8,
     paddingHorizontal: 8,
     justifyContent: 'space-evenly',
@@ -102,7 +135,7 @@ const styles = StyleSheet.create({
   numberListItem: {
     backgroundColor: 'rgba(255, 127, 127, 1)',
     width: '40%',
-    marginVertical: 8,
+    marginVertical: 15,
     padding: 20,
     alignItems: 'center',
     borderRadius: 10,
@@ -116,5 +149,9 @@ const styles = StyleSheet.create({
   },
   numberListText: {
     fontSize: 25,
+  },
+
+  numberListItemSelected: {
+    opacity: 0.5,
   },
 });
