@@ -27,7 +27,6 @@ function RandomNumberCard({
         isSelected ? styles.numberListItemSelected : null,
       ]}
       onPress={() => {
-        console.log(randomNumber + ' pressed');
         onPress();
       }}>
       <Text style={[styles.numberListText, {color: theme.text}]}>
@@ -53,16 +52,28 @@ function GameScreen({randomNumberCount}: {randomNumberCount: number}) {
       .reduce((acc, curr) => acc + curr, 0),
   );
 
-  const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
+  const [selectedNumberIDs, setSelectedNumberIDs] = useState<number[]>([]);
+
+  const [sumSelectedNumbers, setSumSelectedNumbers] = useState<number>(0);
 
   const isNumberSelected = (index: number) => {
-    return selectedNumbers.includes(index);
+    return selectedNumberIDs.includes(index);
   };
 
   const selectNumber = (index: number) => {
     if (!isNumberSelected(index)) {
-      setSelectedNumbers([...selectedNumbers, index]);
+      setSelectedNumberIDs([...selectedNumberIDs, index]);
     }
+    updateSumSelectedNumbers();
+  };
+
+  const updateSumSelectedNumbers = () => {
+    const newSum = selectedNumberIDs.reduce(
+      (acc, curr) => acc + randomNumbers[curr],
+      0,
+    );
+    setSumSelectedNumbers(newSum);
+    console.log('Sum of selected numbers: ' + newSum);
   };
 
   return (
