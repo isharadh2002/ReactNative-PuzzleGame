@@ -73,7 +73,7 @@ function GameScreen({randomNumberCount}: {randomNumberCount: number}) {
       0,
     );
     setSumSelectedNumbers(newSum);
-    console.log('Sum of selected numbers: ' + newSum);
+    console.log('Sum of selected numbers: ' + sumSelectedNumbers);
   };
 
   return (
